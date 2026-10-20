@@ -1,33 +1,76 @@
 # REST Table Exporter
 
+**Paginated PostgREST exports, progress manifests and local comparisons.**
+
+![Language: JavaScript](https://img.shields.io/badge/Language-JavaScript-F7DF1E?style=flat-square&logo=javascript) ![Format: JSONL](https://img.shields.io/badge/Format-JSONL-555555?style=flat-square) [![License: MIT](https://img.shields.io/badge/License-MIT-555555?style=flat-square)](LICENSE)
+
+[Overview](#overview) · [Quickstart](#quickstart) · [Example](#example) · [Validation](#validation) · [Documentation](#documentation)
+
+## Overview
+
 A Node.js toolkit for exporting exposed Supabase REST table rows and comparing local exports.
 
-## Features
+**Stack:** JavaScript ES modules · Node.js · native fetch · Supabase/PostgREST REST API · JSONL/CSV
 
-- Offset and keyset export paths support different collection requirements.
-- Manifests record export progress and source parameters.
-- Comparison tooling identifies table and row-level export differences.
+## Choose the export boundary
 
-## Stack
+| Component | Behavior |
+| --- | --- |
+| Offset | Offset pagination supports straightforward table traversal. |
+| Keyset | Keyset pagination uses a continuation key for another traversal strategy. |
+| Compare | Local comparison scripts inspect table/row differences between exports. |
 
-JavaScript ES modules · Node.js · native fetch · Supabase/PostgREST REST API · JSONL/CSV
+## Processing path
 
-Remote exposed tables are read through REST; local files contain exports, manifests and comparisons. Existing real exports are excluded.
-
-## Getting started
-
-Use a Node.js runtime with native fetch. Review the scripts' environment variables; begin with local comparison fixtures rather than a real service-role credential.
-
-## How it works
-
-```text
-Authorized REST endpoint → paginated table rows → JSONL/manifests → local export comparison
+```mermaid
+flowchart LR
+  N0["Authorized REST endpoint"]
+  N1["paginated table rows"]
+  N2["JSONL/manifests"]
+  N3["local export comparison"]
+N0 --> N1 --> N2 --> N3
 ```
 
-## Current limitations
+## Quickstart
 
-This is not pg_dump: it does not export full SQL schema, policies, triggers, roles or a transactional snapshot. Service credentials can bypass RLS and must remain local. No database export was run.
+```console
+node --check export-supabase-api.mjs
+node --check export-supabase-keyset.mjs
+node --check compare-supabase-exports.mjs
+```
 
-## License
+The commands above install prerequisites or run the specified offline checks. Live collection, cloud operations, messaging and trading are separate operational steps when present.
+
+## Example
+
+**Inspect the workflow**
+
+Read the exporter environment inputs before selecting a source. Retain progress manifests with JSONL/CSV output, then compare two local exports. The quickstart only checks syntax and does not access a database. There is no bundled database dataset or provider credential.
+
+## Configuration and storage
+
+Use Node.js with native fetch. Source URL, authorization and export paths are script-level environment inputs. Credentials with elevated privileges require appropriate local handling and source authorization.
+
+## Repository guide
+
+| Location | Responsibility |
+| --- | --- |
+| [export-supabase-api.mjs](export-supabase-api.mjs) | Offset export |
+| [export-supabase-keyset.mjs](export-supabase-keyset.mjs) | Keyset export |
+| [compare-supabase-exports.mjs](compare-supabase-exports.mjs) | Export comparison |
+
+## Validation
+
+The quickstart lists the declared checks. No passing CI or coverage claim is implied by the technology badges.
+
+## Scope and operational boundaries
+
+A REST export is not pg_dump: SQL schema, policies, triggers, roles and a transactionally consistent database snapshot are outside its documented scope. No dedicated automated test suite is bundled.
+
+## Documentation
+
+- The repository guide above links directly to the implementation and configuration files.
+
+## License and attribution
 
 Project-authored source code is licensed under the [MIT License](LICENSE). Third-party components and datasets retain their respective rights and licenses.
