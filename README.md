@@ -30,4 +30,4 @@ This is not pg_dump: it does not export full SQL schema, policies, triggers, rol
 
 ## License
 
-No open-source license has been granted. Redistribution terms remain to be defined.
+Project-authored source code is licensed under the [MIT License](LICENSE). Third-party components and datasets retain their respective rights and licenses.
